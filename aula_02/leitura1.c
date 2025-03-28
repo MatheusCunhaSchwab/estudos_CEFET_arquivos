@@ -24,6 +24,6 @@ int main(int argc, char** argv){
     }while(c != EOF);
 
     printf("Quantidade de linhas: %d\n", qtd);
-    fclose(entrada); //nao esquecer
+    fclose(entrada);
     return 0;
 }
