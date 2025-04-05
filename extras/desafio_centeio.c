@@ -8,16 +8,16 @@ int main(int argc, char** argv)
   char* palavra, BUFFER[8192];
   int c = 0;
 
-  if(argc != 3)
+  if(argc != 2)
   {
     fprintf(stderr, "Erro na chamada do comando. \n");
     return 1;
   }
 
-  entrada = fopen(argv[1], "rb"); // 'b' é importante no windows
+  entrada = fopen("/workspaces/Estudos-CEFET-Arquivos/arquivos_auxiliares/letraBadRomance.txt", "rb"); // 'b' é importante no windows
   if(!entrada)
   {
-    fprintf(stderr, "Arquivo %s não pode ser aberto para a leitura", argv[1]);
+    fprintf(stderr, "Arquivo %s não pode ser aberto para a leitura", entrada);
     return 1;
   }
 
@@ -26,6 +26,7 @@ int main(int argc, char** argv)
 
   while(c != EOF)
   {
+    c = 
     while (c != ' '){
       //BUFFER += c;
     }
