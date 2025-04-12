@@ -1,12 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#define N 8
 
-typedef struct _Endereco Endereco;
+#define numero_partes 256
 
-struct _Endereco
-{
+typedef struct{
 	char logradouro[72];
 	char bairro[72];
 	char cidade[72];
@@ -14,26 +12,23 @@ struct _Endereco
 	char sigla[2];
 	char cep[8];
 	char lixo[2];
-};
+} Endereco;
 
-int compara(const void *e1, const void *e2)
-{
+int compara(const void *e1, const void *e2){
 	return strncmp(((Endereco*)e1)->cep,((Endereco*)e2)->cep,8);
 }
 
-void ordenaIntercala(char* f1, char* f2, char* arqSaida)
-{
+void intercala(char* f1, char* f2, char* fSaida){
 	FILE *a, *b, *saida;
 	Endereco ea, eb;
-  
+
 	a = fopen(f1,"rb");
 	b = fopen(f2,"rb");
-	saida = fopen(arqSaida,"wb");
+	saida = fopen(fSaida,"wb");
 
 	fread(&ea,sizeof(Endereco),1,a);
 	fread(&eb,sizeof(Endereco),1,b);
 
-	// eof -> End Of File
 	while(!feof(a) && !feof(b))
 	{
 		if(compara(&ea,&eb)<0) // ea < eb
@@ -67,71 +62,64 @@ void ordenaIntercala(char* f1, char* f2, char* arqSaida)
 	fclose(saida);
 }
 
-void divide()
-{
-	FILE *f, *g;
-	Endereco e;
-	int c = 0, i = 0;
-  char nomearq[10];
-	f = fopen("/workspaces/Estudos-CEFET-Arquivos/arquivos_auxiliares/cep_reduzido.dat","rb");
+void separa_ordena(FILE* f, FILE* saida){
+  char nomearq[15];
+  long posicao, qtdEnderecos, enderecosPorParte, sobra;
+  Endereco *e;
+
 	fseek(f, 0, SEEK_END);
-  int tamArquivo = ftell(f);
-  rewind(f);
-	int qtdRegistros = tamArquivo / sizeof(Endereco);
-  while(c < qtdRegistros){
-    sprintf(nomearq, "a%d.dat", i);
-    g = fopen(nomearq, "wb");
-		fseek(f, c*sizeof(Endereco), SEEK_SET);
-    for(int j = 0; j <= 9; j += 1){
-      fread(&e, sizeof(Endereco), 1, f);
-      fwrite(&e, sizeof(Endereco), 1, g);
-    }
-    fclose(g);
-		c += (qtdRegistros/N);
-    i += 1;
+	posicao = ftell(f);
+	qtdEnderecos = posicao / sizeof(Endereco);
+	enderecosPorParte = qtdEnderecos / numero_partes;
+	sobra = qtdEnderecos % numero_partes;
+	rewind(f);
+
+  for (int i = 0; i < numero_partes; i++) {
+		if (i == (numero_partes - 1)) {
+			enderecosPorParte += sobra; //Extra no ultimo arquivo
+		}
+
+		e = (Endereco*) malloc(enderecosPorParte * sizeof(Endereco));
+
+		fread(e, sizeof(Endereco), enderecosPorParte, f);
+
+		qsort(e, enderecosPorParte, sizeof(Endereco), compara);
+    
+		sprintf(nomearq, "cep_%d.dat", i);
+		saida = fopen(nomearq, "wb");
+		fwrite(e, sizeof(Endereco), enderecosPorParte, saida);
+
+		fclose(saida);
+		free(e);
 	}
 }
-  void ordena(char* f1)
-  {
-    FILE *f, *saida;
-    Endereco *e;
-    long posicao, qtd, metade;
-  
-    f = fopen(f1,"rb");
-    fseek(f,0,SEEK_END);
-    posicao = ftell(f);
-    qtd = posicao/sizeof(Endereco);
-    metade = qtd/2;
-    e = (Endereco*) malloc(metade*sizeof(Endereco));
-    rewind(f);
-    if(fread(e,sizeof(Endereco),metade,f) == metade)
-    {
-      printf("Lido = OK\n");
-    }
-    qsort(e,metade,sizeof(Endereco),compara);
-    printf("Ordenado = OK\n");
-    saida = fopen("cep_a.dat","wb");
-    fwrite(e,sizeof(Endereco),metade,saida);
-    fclose(saida);
-    printf("Escrito = OK\n");
-    free(e);
-  
-    e = (Endereco*) malloc((qtd-metade)*sizeof(Endereco));
-    if(fread(e,sizeof(Endereco),qtd-metade,f) == qtd-metade)
-    {
-      printf("Lido = OK\n");
-    }
-    qsort(e,qtd-metade,sizeof(Endereco),compara);
-    printf("Ordenado = OK\n");
-    saida = fopen("cep_b.dat","wb");
-    fwrite(e,sizeof(Endereco),qtd-metade,saida);
-    fclose(saida);
-    printf("Escrito = OK\n");
-    free(e);
-  
-    fclose(f);
-  }
 
-int main(){
+int main(int agrc, char* argv[]){
+  FILE* f = fopen("..\\arquivos_auxiliares\\cep.dat", "rb");
+  FILE* saida;
+  int qtdPartes = numero_partes, prox = 0;
+	char fName0[20], fName1[20], fName2[20];
   
+  separa_ordena(f, saida);
+
+  sprintf(fName0, "cep_%d.dat", prox);
+	sprintf(fName1, "cep_%d.dat", prox + 1);
+	sprintf(fName2, "cep_%d.dat", qtdPartes);
+
+	while (qtdPartes <= (numero_partes * 2) - 2) {
+		intercala(fName0, fName1, fName2);
+
+		qtdPartes += 1;
+		prox += 2;
+
+		sprintf(fName0, "cep_%d.dat", prox);
+		sprintf(fName1, "cep_%d.dat", prox + 1);
+		sprintf(fName2, "cep_%d.dat", qtdPartes);
+
+	}
+  
+  rename(fName0, "Cep_ordenado.dat");
+  fclose(f);
+  
+  return 0;
 }
