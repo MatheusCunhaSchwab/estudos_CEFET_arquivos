@@ -1,3 +1,5 @@
+//Antes de rodar este programa, se roda o indices.c
+
 #include <stdio.h>
 #include <string.h>
 
@@ -54,7 +56,7 @@ int main(int argc, char**argv)
 		}
 	}
     g = fopen("../arquivos_auxiliares/cep.dat", "rb");
-    fseek(g, aux*sizeof(IndiceCep), SEEK_SET);
+    fseek(g, aux*sizeof(Endereco), SEEK_SET);
     fread(&e, sizeof(Endereco), 1, g);
     printf("%.72s\n%.72s\n%.72s\n%.72s\n%.2s\n%.8s\n",e.logradouro,e.bairro,e.cidade,e.uf,e.sigla,e.cep);
 	printf("Quantidade de visualizações: %d\n", qtdrodagens);
