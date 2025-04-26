@@ -29,7 +29,7 @@ int main(int argc, char**argv)
 	}
 	c = 0;
 	printf("Tamanho da Estrutura: %ld\n\n", sizeof(Endereco));
-	f = fopen("/workspaces/Estudos-CEFET-Arquivos/arquivos_auxiliares/cep_ordenado.dat","rb");
+	f = fopen("../arquivos_auxiliares/cep_ordenado.dat","rb");
 	fseek(f, 0, SEEK_END);
 	int tamArquivo = ftell(f);
 	int qtdRegistros = tamArquivo / sizeof(Endereco);
@@ -57,7 +57,7 @@ int main(int argc, char**argv)
 			fim = meio - 1;
 		}
 	}
-	printf("Quantidade de visualizações: %d\n", c);
+	printf("Quantidade de visualizacoes: %d\n", c);
 	fclose(f);
 }
 

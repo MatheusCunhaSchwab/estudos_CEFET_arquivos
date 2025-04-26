@@ -29,7 +29,7 @@ int main(int argc, char**argv)
 
 	c = 0;
 	printf("Tamanho da Estrutura: %ld\n\n", sizeof(Endereco));
-	f = fopen("cep.dat","rb");
+	f = fopen("../arquivos_auxiliares/cep.dat","rb");
 	qt = fread(&e,sizeof(Endereco),1,f);
 	while(qt > 0)
 	{

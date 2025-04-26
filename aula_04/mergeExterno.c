@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define numero_partes 256
+#define numero_partes 8
 
 typedef struct{
 	char logradouro[72];
@@ -95,7 +95,7 @@ void separa_ordena(FILE* f, FILE* saida){
 }
 
 int main(int agrc, char* argv[]){
-  FILE* f = fopen("..\\arquivos_auxiliares\\cep.dat", "rb");
+  FILE* f = fopen("../arquivos_auxiliares/cep.dat", "rb");
   FILE* saida;
   int qtdPartes = numero_partes, prox = 0;
 	char fName0[20], fName1[20], fName2[20];
