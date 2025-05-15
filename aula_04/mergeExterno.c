@@ -64,7 +64,7 @@ void intercala(char* f1, char* f2, char* fSaida){
 
 void separa_ordena(FILE* f, FILE* saida){
   char nomearq[15];
-  long posicao, qtdEnderecos, enderecosPorParte, sobra;
+  long qtdEnderecos, enderecosPorParte, sobra;
   Endereco *e;
 
 	fseek(f, 0, SEEK_END);

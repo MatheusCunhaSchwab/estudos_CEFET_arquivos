@@ -93,7 +93,7 @@ int main() {
 -> Outra forma de percorrer arquivos é com fseek.
 <pre>fseek(arquivo, deslocamento, tipo)
   variações de tipo:
-  -> SEEK_END: Em relação ao começo do arquivo 
+  -> SEEK_END: Em relação ao final do arquivo 
   -> SEEK_SET: Em relação ao começo do arquivo 
   -> SEEK_CUR: Em relação a posição atual da cabeça de leitura</pre>
 -> Ele pode ser usado junto com fwrite para escrever em qualquer posição do arquivo. <br>
