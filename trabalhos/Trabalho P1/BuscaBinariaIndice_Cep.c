@@ -52,7 +52,7 @@ int main(int argc, char**argv)
 			fim = meio - 1;
 		}
 	}
-    g = fopen("../arquivos_auxiliares/cep.dat", "rb");
+    g = fopen("../../arquivos_auxiliares/cep.dat", "rb");
     fseek(g, ic.posicao*sizeof(Endereco), SEEK_SET);
     fread(&e, sizeof(Endereco), 1, g);
     printf("%.72s\n%.72s\n%.72s\n%.72s\n%.2s\n%.8s\n",e.logradouro,e.bairro,e.cidade,e.uf,e.sigla,e.cep);

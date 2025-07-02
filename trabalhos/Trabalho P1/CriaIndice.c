@@ -36,7 +36,7 @@ int main()
     long tamanho, qtdEnderecos, i = 0;
     
 
-	f = fopen("../arquivos_auxiliares/cep.dat","rb");
+	f = fopen("../../arquivos_auxiliares/cep.dat","rb");
     fseek(f, 0, SEEK_END);
 	tamanho = ftell(f);
     rewind(f);

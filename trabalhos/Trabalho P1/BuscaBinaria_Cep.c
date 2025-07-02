@@ -17,7 +17,7 @@ int main(int argc, char**argv){
 		return 1;
 	}
 
-	f = fopen("../arquivos_auxiliares/cep_ordenado.dat","rb");
+	f = fopen("../../arquivos_auxiliares/cep_ordenado.dat","rb");
 	fseek(f, 0, SEEK_END);
 
 	int tamArquivo = ftell(f);

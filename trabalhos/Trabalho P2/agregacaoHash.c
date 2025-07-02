@@ -11,27 +11,27 @@ typedef struct HashElement {
   int uf;
   float soma;
   int qt;
-  struct HashElement *next;
+  struct HashElement *prox;
 } HashElement;
 
-void HashDistribution(HashElement table[]) {
-  printf("\nDistribuição da tabela hash:\n");
+void distribuicaoHash(HashElement tabela[]) {
+  printf("\nDistribuicao da tabela hash:\n");
   for (int i = 0; i < HashSize; i++) {
     int contador = 0;
-    HashElement* atual = &table[i];
+    HashElement* atual = &tabela[i];
     if (atual->uf != -1) {
       contador++;
-      atual = atual->next;
+      atual = atual->prox;
       while (atual != NULL) {
         contador++;
-        atual = atual->next;
+        atual = atual->prox;
       }
     }
     printf("Posicao %2d: %d elemento(s)\n", i, contador);
   }
 }
 
-void HashAccumulator(HashElement *tabela, int uf, float peso){
+void acumuladorHash(HashElement *tabela, int uf, float peso){
   int pos = uf % HashSize;
   HashElement *atual = &tabela[pos];
 
@@ -39,7 +39,7 @@ void HashAccumulator(HashElement *tabela, int uf, float peso){
     atual->uf = uf;
     atual->soma = peso;
     atual->qt = 1;
-    atual->next = NULL;
+    atual->prox = NULL;
     return;
   }
 
@@ -49,8 +49,8 @@ void HashAccumulator(HashElement *tabela, int uf, float peso){
       atual->qt += 1;
       return;
     }
-    if (atual->next == NULL) break;
-    atual = atual->next;
+    if (atual->prox == NULL) break;
+    atual = atual->prox;
   }
 
   total_colisoes += 1;
@@ -59,55 +59,56 @@ void HashAccumulator(HashElement *tabela, int uf, float peso){
   novo->uf = uf;
   novo->soma = peso;
   novo->qt = 1;
-  novo->next = NULL;
-  atual->next = novo;
+  novo->prox = NULL;
+  atual->prox = novo;
 }
 
 
-void printMediumWeight(HashElement table[]) {
+void imprimeMedias(HashElement tabela[]) {
   printf("----------------------------------\n");
   printf("| UF  |\tMedia de Peso (g)   |\n");
   printf("----------------------------------\n");
 
   for (int i = 0; i < HashSize; i++) {
-  HashElement* atual = &table[i];
+  HashElement* atual = &tabela[i];
   while (atual != NULL && atual->uf != -1) {
     float media = atual->soma / atual->qt;
     printf("| %02d  |\t%.2f\n", atual->uf, media);
-    atual = atual->next;
+    atual = atual->prox;
   }
   }
 }
 
-void HashTableInicializer(HashElement table[]) {
+void inicializadorHash(HashElement tabela[]) {
   for (int i = 0; i < HashSize; i++) {
-  table[i].uf = -1;
-  table[i].soma = 0;
-  table[i].qt = 0;
-  table[i].next = NULL;
+  tabela[i].uf = -1;
+  tabela[i].soma = 0;
+  tabela[i].qt = 0;
+  tabela[i].prox = NULL;
   }
 }
 
-void FreeTable(HashElement table[]) {
+void liberaHash(HashElement tabela[]) {
   for (int i = 0; i < HashSize; i++) {
-  HashElement* atual = table[i].next;
+  HashElement* atual = tabela[i].prox;
   while (atual != NULL) {
     HashElement* temp = atual;
-    atual = atual->next;
+    atual = atual->prox;
     free(temp);
   }
   }
 }
 
 int main() {
-  FILE *f = fopen("../arquivos_auxiliares/sinasc.csv", "r");
+  FILE *f;
+  f = fopen("../../arquivos_auxiliares/sinasc.csv", "r");
   if (f == NULL) {
   perror("Erro ao abrir o arquivo");
   return 1;
   }
 
-  HashElement HashTable[HashSize];
-  HashTableInicializer(HashTable);
+  HashElement tabelaHash[HashSize];
+  inicializadorHash(tabelaHash);
 
   char buffer[MAX];
   char *prox;
@@ -128,15 +129,15 @@ int main() {
 
   if (codmunres > 0 && peso > 0) {
     int uf = codmunres / 10000;
-    HashAccumulator(HashTable, uf, peso);
+    acumuladorHash(tabelaHash, uf, peso);
   }
   }
 
   fclose(f);
 
-  printMediumWeight(HashTable);
-  HashDistribution(HashTable);
-  printf("\nTotal de colisões na tabela hash: %d\n", total_colisoes);
-  FreeTable(HashTable);
+  imprimeMedias(tabelaHash);
+  distribuicaoHash(tabelaHash);
+  printf("\nTotal de colisoes na tabela hash: %d\n", total_colisoes);
+  liberaHash(tabelaHash);
   return 0;
 }

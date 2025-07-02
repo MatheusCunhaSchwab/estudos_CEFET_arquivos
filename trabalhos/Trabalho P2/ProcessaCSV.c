@@ -4,7 +4,7 @@
 #define QtdPartes 4
 
 int main(){
-    FILE *f = fopen("../arquivos_auxiliares/dados_dos_famosos.csv", "r");
+    FILE *f = fopen("../../arquivos_auxiliares/dados_dos_famosos.csv", "r");
     char buffer[64];
     int aux = 0;
     fgets(buffer, 64, f);
